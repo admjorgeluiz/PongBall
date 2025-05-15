@@ -1,85 +1,128 @@
+
+import os
 import pygame
-import math
+from ball import Ball
+from paddle import Paddle
 
-# Inicializa o Pygame
 pygame.init()
-screen = pygame.display.set_mode((360, 720))
+pygame.font.init()
+pygame.mixer.pre_init(44100, -16, 1, 512)
+
+# Configurações
+SCREEN_WIDTH = 700
+SCREEN_HEIGHT = 500
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Pong Ball")
+
+font_name = 'hooge 05_53'
+if font_name.lower() not in pygame.font.get_fonts():
+    font_name = pygame.font.get_default_font()
+
+main_font = pygame.font.SysFont(font_name, 65)
+small_font = pygame.font.SysFont(font_name, 24)
+
 clock = pygame.time.Clock()
-running = True
-pygame.mouse.set_visible(False)
-dt = 0
+def draw_net(surface, color=(255, 255, 255), width=4, height=15, gap=20):
+    x = SCREEN_WIDTH // 2 - width // 2
+    for y in range(0, SCREEN_HEIGHT, height + gap):
+        pygame.draw.rect(surface, color, (x, y, width, height))
 
-circle_pos = pygame.Vector2(180, 100)  # Posição inicial do círculo
-circle_vel = pygame.Vector2(0, 0)  # Agora é um vetor
-circle_rad = 10
-gravity = pygame.Vector2(2, 7 * 100)  # Gravidade como vetor (só no eixo Y)
+def draw_text_center(text, font, color, surface, y):
+    text_obj = font.render(text, True, color)
+    text_rect = text_obj.get_rect(center=(SCREEN_WIDTH // 2, y))
+    surface.blit(text_obj, text_rect)
 
-rect_pos = pygame.Vector2(180, 700)  # Posição ajustada para ficar visível
-rect_size = pygame.Vector2(50, 25)  # Largura e altura do retângulo
-
-# Física
-elasticity = 1.0  # Coeficiente de restituição
-
-# Loop principal
-rodando = True
-while rodando:
-    dt = clock.tick(60) / 1000  # DeltaTime mais consistente em 60 FPS
-
-    # Processa eventos
-    for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
-            rodando = False
-
-    # Controla o retângulo com o mouse
-    mouse_x, mouse_y = pygame.mouse.get_pos()
-    rect_pos.x = mouse_x - rect_size.x / 2  # Centraliza no mouse
-
-    # Limita o retângulo na tela
-    rect_pos.x = max(0, min(rect_pos.x, screen.get_width() - rect_size.x))
-
-    # Aplica gravidade
-    circle_vel += gravity * dt
-    circle_pos += circle_vel * dt
-
-    # Detecção de colisão
-    rect_rect = pygame.Rect(rect_pos.x, rect_pos.y, rect_size.x, rect_size.y)
-    circle_rect = pygame.Rect(circle_pos.x - circle_rad, circle_pos.y - circle_rad,
-                              circle_rad * 2, circle_rad * 2)
-
-    if circle_rect.colliderect(rect_rect):
-        # Verifica colisão no topo do retângulo
-        if circle_pos.y + circle_rad <= rect_pos.y + 10:
-            # Quique vertical
-            circle_vel.y = -circle_vel.y * elasticity
-            circle_pos.y = rect_pos.y - circle_rad
-        else:
-            # Colisão lateral
-            relative_intersect_x = (circle_pos.x - (rect_pos.x + rect_size.x / 2))
-            normalized_relative_intersect_x = relative_intersect_x / (rect_size.x / 2)
-            bounce_angle = normalized_relative_intersect_x * (math.pi / 3)  # Limita a 60 graus
-
-            speed = math.sqrt(circle_vel.x ** 2 + circle_vel.y ** 2) * elasticity
-            circle_vel.x = speed * math.sin(bounce_angle)
-            circle_vel.y = -speed * math.cos(bounce_angle)
-
-    # Colisão com paredes
-    if circle_pos.x - circle_rad <= 0:
-        circle_pos.x = circle_rad
-        circle_vel.x = -circle_vel.x * elasticity
-    elif circle_pos.x + circle_rad >= screen.get_width():
-        circle_pos.x = screen.get_width() - circle_rad
-        circle_vel.x = -circle_vel.x * elasticity
-
-    # Colisão com o chão
-    if circle_pos.y + circle_rad >= screen.get_height():
-        circle_pos.y = screen.get_height() - circle_rad
-        circle_vel.y = -circle_vel.y * elasticity
-
-    # Desenho
-    screen.fill("white")
-    pygame.draw.rect(screen, "blue", rect_rect)
-    pygame.draw.circle(screen, "black", (int(circle_pos.x), int(circle_pos.y)), circle_rad)
-
+def show_start_screen():
+    screen.fill("black")
+    draw_text_center("Pong Ball", main_font, (255, 255, 255), screen, 150)
+    draw_text_center("Pressione ESPAÇO para jogar", small_font, (255, 255, 255), screen, 250)
+    draw_text_center("P para pausar/resumir", small_font, (180, 180, 180), screen, 300)
+    draw_text_center("W/S e ↑/↓ para mover", small_font, (180, 180, 180), screen, 340)
     pygame.display.flip()
 
-pygame.quit()
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                waiting = False
+
+def run_game():
+    # Sprites
+    paddle_a = Paddle("white", 10, 100)
+    paddle_a.rect.x = 0
+    paddle_a.rect.y = 200
+
+    paddle_b = Paddle("white", 10, 100)
+    paddle_b.rect.x = SCREEN_WIDTH - 10
+    paddle_b.rect.y = 200
+
+    ball = Ball("red", 20, 20)
+    ball.rect.x = SCREEN_WIDTH // 2
+    ball.rect.y = SCREEN_HEIGHT // 2
+
+    all_sprites = pygame.sprite.Group(paddle_a, paddle_b, ball)
+
+    score_a = 0
+    score_b = 0
+    paused = False
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
+                paused = not paused
+
+        if not paused:
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_w]:
+                paddle_a.move_up(5)
+            if keys[pygame.K_s]:
+                paddle_a.move_down(5, SCREEN_HEIGHT)
+            if keys[pygame.K_UP]:
+                paddle_b.move_up(5)
+            if keys[pygame.K_DOWN]:
+                paddle_b.move_down(5, SCREEN_HEIGHT)
+
+            all_sprites.update()
+
+            if ball.rect.y <= 0 or ball.rect.y >= SCREEN_HEIGHT - ball.rect.height:
+                ball.velocity[1] = -ball.velocity[1]
+
+            if ball.rect.x <= 0:
+                score_b += 1
+                ball.rect.x = SCREEN_WIDTH // 2
+                ball.rect.y = SCREEN_HEIGHT // 2
+                ball.velocity[0] = -ball.velocity[0]
+
+            if ball.rect.x >= SCREEN_WIDTH - ball.rect.width:
+                score_a += 1
+                ball.rect.x = SCREEN_WIDTH // 2
+                ball.rect.y = SCREEN_HEIGHT // 2
+                ball.velocity[0] = -ball.velocity[0]
+
+            if pygame.sprite.collide_mask(ball, paddle_a) or pygame.sprite.collide_mask(ball, paddle_b):
+                ball.bounce()
+
+            screen.fill("black")
+            draw_net(screen)
+            all_sprites.draw(screen)
+
+            score_text = main_font.render(f"{score_a}   {score_b}", True, (255, 255, 255))
+            screen.blit(score_text, ((SCREEN_WIDTH - score_text.get_width()) // 2, 20))
+
+        else:
+            draw_text_center("PAUSADO", main_font, (255, 255, 0), screen, SCREEN_HEIGHT // 2)
+
+        pygame.display.flip()
+        clock.tick(60)
+
+    pygame.quit()
+
+# Execução do jogo
+show_start_screen()
+run_game()
