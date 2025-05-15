@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79e13072-002a-4c04-a592-dc484a2f2239" name="Changes" comment="Atualização do projeto">
-      <change afterPath="$PROJECT_DIR$/../PongBall/Pong!.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../PongBall/PongSmall.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../PongBall/ball.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../PongBall/paddle.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../PongBall/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../PongBall/.idea/JumpBall.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../PongBall/.idea/PongBall.iml" afterDir="false" />
+    <list default="true" id="79e13072-002a-4c04-a592-dc484a2f2239" name="Changes" comment="Versão 1.0 do projeto">
       <change beforePath="$PROJECT_DIR$/../PongBall/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../PongBall/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PongBall/ball.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PongBall/ball.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../PongBall/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PongBall/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../PongBall/paddle.py" beforeDir="false" afterPath="$PROJECT_DIR$/../PongBall/paddle.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -222,7 +218,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747257808560</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Versão 1.0 do projeto">
+      <option name="closed" value="true" />
+      <created>1747275204852</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1747275204852</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -239,6 +243,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Criação do projeto" />
     <MESSAGE value="Atualização do projeto" />
-    <option name="LAST_COMMIT_MESSAGE" value="Atualização do projeto" />
+    <MESSAGE value="Versão 1.0 do projeto" />
+    <option name="LAST_COMMIT_MESSAGE" value="Versão 1.0 do projeto" />
   </component>
 </project>

@@ -1,5 +1,6 @@
 import pygame
 
+
 # Classe representando a raquete
 class Paddle(pygame.sprite.Sprite):
     def __init__(self, color, width, height):

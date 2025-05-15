@@ -1,5 +1,3 @@
-
-import os
 import pygame
 from ball import Ball
 from paddle import Paddle
@@ -22,15 +20,19 @@ main_font = pygame.font.SysFont(font_name, 65)
 small_font = pygame.font.SysFont(font_name, 24)
 
 clock = pygame.time.Clock()
+
+
 def draw_net(surface, color=(255, 255, 255), width=4, height=15, gap=20):
     x = SCREEN_WIDTH // 2 - width // 2
     for y in range(0, SCREEN_HEIGHT, height + gap):
         pygame.draw.rect(surface, color, (x, y, width, height))
 
+
 def draw_text_center(text, font, color, surface, y):
     text_obj = font.render(text, True, color)
     text_rect = text_obj.get_rect(center=(SCREEN_WIDTH // 2, y))
     surface.blit(text_obj, text_rect)
+
 
 def show_start_screen():
     screen.fill("black")
@@ -49,6 +51,7 @@ def show_start_screen():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 waiting = False
 
+
 def run_game():
     # Sprites
     paddle_a = Paddle("white", 10, 100)
@@ -63,7 +66,10 @@ def run_game():
     ball.rect.x = SCREEN_WIDTH // 2
     ball.rect.y = SCREEN_HEIGHT // 2
 
-    all_sprites = pygame.sprite.Group(paddle_a, paddle_b, ball)
+    all_sprites = pygame.sprite.Group()
+    all_sprites.add(paddle_a)
+    all_sprites.add(paddle_b)
+    all_sprites.add(ball)
 
     score_a = 0
     score_b = 0
@@ -122,6 +128,7 @@ def run_game():
         clock.tick(60)
 
     pygame.quit()
+
 
 # Execução do jogo
 show_start_screen()
