@@ -5,10 +5,14 @@ from paddle import Paddle
 pygame.init()
 pygame.font.init()
 pygame.mixer.pre_init(44100, -16, 1, 512)
+
+# Sons
 hit_sound = pygame.mixer.Sound("Pong!.mp3")
 hit_sound.set_volume(0.2)
 score_sound = pygame.mixer.Sound("game_point.mp3")
 score_sound.set_volume(0.2)
+victory_sound = pygame.mixer.Sound("winner.mp3")
+victory_sound.set_volume(0.2)
 
 # Configurações
 SCREEN_WIDTH = 700
@@ -81,6 +85,7 @@ def run_game():
     score_b = 0
     paused = False
     running = True
+    flash_timer = 0  # Controla o efeito de piscar a tela
 
     while running:
         for event in pygame.event.get():
@@ -111,6 +116,7 @@ def run_game():
                 ball.rect.x = SCREEN_WIDTH // 2
                 ball.rect.y = SCREEN_HEIGHT // 2
                 ball.velocity[0] = -ball.velocity[0]
+                flash_timer = 6  # Pisca por 6 frames (~0.1s)
 
             if ball.rect.x >= SCREEN_WIDTH - ball.rect.width:
                 score_a += 1
@@ -118,6 +124,7 @@ def run_game():
                 ball.rect.x = SCREEN_WIDTH // 2
                 ball.rect.y = SCREEN_HEIGHT // 2
                 ball.velocity[0] = -ball.velocity[0]
+                flash_timer = 6
 
             if pygame.sprite.collide_mask(ball, paddle_a) or pygame.sprite.collide_mask(
                 ball, paddle_b
@@ -125,27 +132,18 @@ def run_game():
                 ball.bounce()
                 hit_sound.play()
 
-            # Condicional pra vencedor e após vencedor voltar a tela incial
+            # Condicional pra vencedor e após vencedor voltar a tela inicial
             if score_a >= 10 or score_b >= 10:
-
-                for i in range(2):  # 3 piscadas (2 frames por ciclo)
-                    color = (255, 255, 255) if i % 2 == 0 else (0, 0, 0)
+                for i in range(3):
+                    color = (0, 255, 0) if i % 2 == 0 else (0, 0, 0)
                     screen.fill(color)
                     pygame.display.flip()
-                    victory_sound = pygame.mixer.Sound(
-                        "winner.mp3"
-                    )  # Substitua pelo nome correto
                     victory_sound.play()
-                    victory_sound.set_volume(0.2)
                     pygame.time.delay(400)
                 winner = "Jogador A" if score_a >= 10 else "Jogador B"
                 screen.fill("black")
                 draw_text_center(
-                    f"{winner} venceu!",
-                    main_font,
-                    (0, 255, 0),
-                    screen,
-                    SCREEN_HEIGHT // 2,
+                    f"{winner} venceu!", main_font, (0, 255, 0), screen, SCREEN_HEIGHT // 2
                 )
                 pygame.display.flip()
                 pygame.time.delay(4000)
@@ -156,7 +154,13 @@ def run_game():
                 # Reinicia a função run_game (novo jogo)
                 run_game()
 
-            screen.fill("black")
+            # Efeito de piscar verde
+            if flash_timer > 0:
+                screen.fill((0, 255, 0))  # Verde forte
+                flash_timer -= 1
+            else:
+                screen.fill("black")
+
             draw_net(screen)
             all_sprites.draw(screen)
 
