@@ -20,7 +20,7 @@ SCREEN_HEIGHT = 500
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Pong Ball")
 
-font_name = "hooge 05_53"
+font_name = "arial"
 if font_name.lower() not in pygame.font.get_fonts():
     font_name = pygame.font.get_default_font()
 
@@ -29,7 +29,7 @@ small_font = pygame.font.SysFont(font_name, 24)
 
 clock = pygame.time.Clock()
 
-def fade(screen, width, height, fade_in=True, speed=5, text=None, font=None, color=(255, 255, 255)):
+def fade(screen, width, height, fade_in=True, speed=3, text=None, font=None, color=(255, 255, 255)):
     fade_surface = pygame.Surface((width, height))
     fade_surface.fill((0, 0, 0))
 

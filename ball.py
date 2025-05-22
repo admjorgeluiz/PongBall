@@ -20,7 +20,7 @@ class Ball(pygame.sprite.Sprite):
         self.draw_ball(self.normal_color)
 
         self.rect = self.image.get_rect()
-        self.velocity = [randint(3, 8), randint(-15, 15)]
+        self.velocity = [randint(3, 8), randint(-8, 18)]
 
     def draw_ball(self, color):
         # Desenha a bola base com uma cor sólida
@@ -62,8 +62,8 @@ class Ball(pygame.sprite.Sprite):
     def bounce(self):
         # Inverte direção e ativa efeito de brilho
         self.velocity[0] = -self.velocity[0]
-        self.velocity[1] = randint(-15, 15)
-        self.glow_timer = 10  # Brilho por 10 frames (~0.16s a 60 FPS)
+        self.velocity[1] = randint(-8, 8)
+        self.glow_timer = 10
 
     def change_color(self, color):
         # Muda a cor da bola permanentemente
