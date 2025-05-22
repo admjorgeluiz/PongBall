@@ -1,4 +1,5 @@
 import pygame
+import random
 from ball import Ball
 from paddle import Paddle
 
@@ -60,6 +61,22 @@ def draw_text_center(text, font, color, surface, y):
     text_rect = text_obj.get_rect(center=(SCREEN_WIDTH // 2, y))
     surface.blit(text_obj, text_rect)
 
+def draw_paddle_with_effects(surface, paddle, base_color, halo_color, halo=True, tremor=False):
+    # Tremor: deslocamento aleatório pequeno
+    tremor_x = random.randint(-3, 3) if tremor else 0
+    tremor_y = random.randint(-3, 3) if tremor else 0
+
+    # Halo: desenha várias camadas semi-transparentes ao redor
+    if halo:
+        for i in range(12, 0, -3):
+            halo_surface = pygame.Surface((paddle.rect.width + i, paddle.rect.height + i), pygame.SRCALPHA)
+            alpha = max(20, 255 // (i + 1))  # Transparência proporcional
+            pygame.draw.rect(halo_surface, (*halo_color, alpha), (0, 0, paddle.rect.width + i, paddle.rect.height + i))
+            surface.blit(halo_surface, (paddle.rect.x - i//2, paddle.rect.y - i//2))
+
+    # Desenha a raquete original por cima
+    pygame.draw.rect(surface, base_color, (paddle.rect.x + tremor_x, paddle.rect.y + tremor_y, paddle.rect.width, paddle.rect.height))
+
 def show_start_screen():
     screen.fill("black")
     draw_text_center("Pong Ball", main_font, (255, 255, 255), screen, 150)
@@ -102,6 +119,10 @@ def run_game():
     running = True
     flash_timer = 0
 
+    # Timers para tremor
+    tremor_a_timer = 0
+    tremor_b_timer = 0
+
     fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=True, text="Vamos lá!", font=small_font)
 
     while running:
@@ -135,7 +156,7 @@ def run_game():
                 ball.rect.x = SCREEN_WIDTH // 2
                 ball.rect.y = SCREEN_HEIGHT // 2
                 ball.velocity[0] = -ball.velocity[0]
-                flash_timer = 6
+                flash_timer = 10  # Mais quadros de verde
 
             if ball.rect.x >= SCREEN_WIDTH - ball.rect.width:
                 score_a += 1
@@ -143,15 +164,18 @@ def run_game():
                 ball.rect.x = SCREEN_WIDTH // 2
                 ball.rect.y = SCREEN_HEIGHT // 2
                 ball.velocity[0] = -ball.velocity[0]
-                flash_timer = 6
+                flash_timer = 10  # Mais quadros de verde
 
-            if pygame.sprite.collide_mask(ball, paddle_a) or pygame.sprite.collide_mask(
-                ball, paddle_b
-            ):
+            if pygame.sprite.collide_mask(ball, paddle_a):
                 ball.bounce()
                 hit_sound.play()
+                tremor_a_timer = 10  # Tremor por 10 quadros
 
-            # Condicional pra vencedor e após vencedor voltar a tela inicial
+            if pygame.sprite.collide_mask(ball, paddle_b):
+                ball.bounce()
+                hit_sound.play()
+                tremor_b_timer = 10  # Tremor por 10 quadros
+
             if score_a >= 10 or score_b >= 10:
                 for i in range(3):
                     color = (0, 255, 0) if i % 2 == 0 else (0, 0, 0)
@@ -167,26 +191,35 @@ def run_game():
 
                 fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=False, text="Fim de jogo, MEU JOVEM", font=small_font)
 
-                # Volta para a tela inicial
                 show_start_screen()
 
                 fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=True, text="Novo jogo!", font=small_font)
 
-                # Reinicia a função run_game (novo jogo)
                 run_game()
 
-            # Efeito de piscar verde
             if flash_timer > 0:
-                screen.fill((0, 255, 0))  # Verde forte
+                screen.fill((0, 255, 0))
                 flash_timer -= 1
             else:
                 screen.fill("black")
 
             draw_net(screen)
+
+            # Desenha raquetes com halo e tremor se ativo
+            draw_paddle_with_effects(screen, paddle_a, (255, 255, 255), (0, 0, 255), halo=True, tremor=(tremor_a_timer > 0))  # Azul
+            draw_paddle_with_effects(screen, paddle_b, (255, 255, 255), (255, 0, 0), halo=True, tremor=(tremor_b_timer > 0))  # Vermelho
+
+            # Desenha a bola
             all_sprites.draw(screen)
 
             score_text = main_font.render(f"{score_a}   {score_b}", True, (255, 255, 255))
             screen.blit(score_text, ((SCREEN_WIDTH - score_text.get_width()) // 2, 20))
+
+            # Decrementa timers de tremor
+            if tremor_a_timer > 0:
+                tremor_a_timer -= 1
+            if tremor_b_timer > 0:
+                tremor_b_timer -= 1
 
         else:
             draw_text_center("PAUSADO", main_font, (255, 255, 0), screen, SCREEN_HEIGHT // 2)
@@ -196,7 +229,5 @@ def run_game():
 
     pygame.quit()
 
-
-# Execução do jogo
 show_start_screen()
 run_game()
