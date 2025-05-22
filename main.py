@@ -29,25 +29,41 @@ small_font = pygame.font.SysFont(font_name, 24)
 
 clock = pygame.time.Clock()
 
+def fade(screen, width, height, fade_in=True, speed=5, text=None, font=None, color=(255, 255, 255)):
+    fade_surface = pygame.Surface((width, height))
+    fade_surface.fill((0, 0, 0))
+
+    if fade_in:
+        alpha_range = range(255, -1, -speed)
+    else:
+        alpha_range = range(0, 256, speed)
+
+    for alpha in alpha_range:
+        screen.fill("black")
+        if text and font:
+            text_surface = font.render(text, True, color)
+            text_rect = text_surface.get_rect(center=(width // 2, height // 2))
+            screen.blit(text_surface, text_rect)
+        
+        fade_surface.set_alpha(alpha)
+        screen.blit(fade_surface, (0, 0))
+        pygame.display.update()
+        pygame.time.delay(10)
 
 def draw_net(surface, color=(255, 255, 255), width=4, height=15, gap=20):
     x = SCREEN_WIDTH // 2 - width // 2
     for y in range(0, SCREEN_HEIGHT, height + gap):
         pygame.draw.rect(surface, color, (x, y, width, height))
 
-
 def draw_text_center(text, font, color, surface, y):
     text_obj = font.render(text, True, color)
     text_rect = text_obj.get_rect(center=(SCREEN_WIDTH // 2, y))
     surface.blit(text_obj, text_rect)
 
-
 def show_start_screen():
     screen.fill("black")
     draw_text_center("Pong Ball", main_font, (255, 255, 255), screen, 150)
-    draw_text_center(
-        "Pressione ESPAÇO para jogar", small_font, (255, 255, 255), screen, 250
-    )
+    draw_text_center("Pressione ESPAÇO para jogar", small_font, (255, 255, 255), screen, 250)
     draw_text_center("P para pausar/resumir", small_font, (180, 180, 180), screen, 300)
     draw_text_center("W/S e ↑/↓ para mover", small_font, (180, 180, 180), screen, 340)
     pygame.display.flip()
@@ -60,7 +76,6 @@ def show_start_screen():
                 exit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 waiting = False
-
 
 def run_game():
     # Sprites
@@ -85,7 +100,9 @@ def run_game():
     score_b = 0
     paused = False
     running = True
-    flash_timer = 0  # Controla o efeito de piscar a tela
+    flash_timer = 0
+
+    fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=True, text="Vamos lá!", font=small_font)
 
     while running:
         for event in pygame.event.get():
@@ -93,6 +110,8 @@ def run_game():
                 running = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
                 paused = not paused
+                fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=False, text="Pausado", font=small_font)
+                fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=True, text="Continuando...", font=small_font)
 
         if not paused:
             keys = pygame.key.get_pressed()
@@ -116,7 +135,7 @@ def run_game():
                 ball.rect.x = SCREEN_WIDTH // 2
                 ball.rect.y = SCREEN_HEIGHT // 2
                 ball.velocity[0] = -ball.velocity[0]
-                flash_timer = 6  # Pisca por 6 frames (~0.1s)
+                flash_timer = 6
 
             if ball.rect.x >= SCREEN_WIDTH - ball.rect.width:
                 score_a += 1
@@ -142,14 +161,16 @@ def run_game():
                     pygame.time.delay(400)
                 winner = "Jogador A" if score_a >= 10 else "Jogador B"
                 screen.fill("black")
-                draw_text_center(
-                    f"{winner} venceu!", main_font, (0, 255, 0), screen, SCREEN_HEIGHT // 2
-                )
+                draw_text_center(f"{winner} venceu!", main_font, (0, 255, 0), screen, SCREEN_HEIGHT // 2)
                 pygame.display.flip()
                 pygame.time.delay(4000)
 
+                fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=False, text="Fim de jogo, MEU JOVEM", font=small_font)
+
                 # Volta para a tela inicial
                 show_start_screen()
+
+                fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=True, text="Novo jogo!", font=small_font)
 
                 # Reinicia a função run_game (novo jogo)
                 run_game()
@@ -164,15 +185,11 @@ def run_game():
             draw_net(screen)
             all_sprites.draw(screen)
 
-            score_text = main_font.render(
-                f"{score_a}   {score_b}", True, (255, 255, 255)
-            )
+            score_text = main_font.render(f"{score_a}   {score_b}", True, (255, 255, 255))
             screen.blit(score_text, ((SCREEN_WIDTH - score_text.get_width()) // 2, 20))
 
         else:
-            draw_text_center(
-                "PAUSADO", main_font, (255, 255, 0), screen, SCREEN_HEIGHT // 2
-            )
+            draw_text_center("PAUSADO", main_font, (255, 255, 0), screen, SCREEN_HEIGHT // 2)
 
         pygame.display.flip()
         clock.tick(60)
