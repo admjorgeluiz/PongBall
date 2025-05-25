@@ -189,7 +189,7 @@ def run_game():
                 pygame.display.flip()
                 pygame.time.delay(4000)
 
-                fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=False, text="Fim de jogo, MEU JOVEM", font=small_font)
+                fade(screen, SCREEN_WIDTH, SCREEN_HEIGHT, fade_in=False, text="Fim de jogo, JOVEM", font=small_font)
 
                 show_start_screen()
 
@@ -201,7 +201,7 @@ def run_game():
                 screen.fill((0, 255, 0))
                 flash_timer -= 1
             else:
-                screen.fill("black")
+                screen.fill("gray")
 
             draw_net(screen)
 
