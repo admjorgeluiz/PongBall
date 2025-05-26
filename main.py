@@ -62,15 +62,15 @@ def draw_text_center(text, font, color, surface, y):
     surface.blit(text_obj, text_rect)
 
 def draw_paddle_with_effects(surface, paddle, base_color, halo_color, halo=True, tremor=False):
-    # Tremor: deslocamento aleatório pequeno
+    # Tremor
     tremor_x = random.randint(-3, 3) if tremor else 0
     tremor_y = random.randint(-3, 3) if tremor else 0
 
-    # Halo: desenha várias camadas semi-transparentes ao redor
+    # Halo
     if halo:
         for i in range(12, 0, -3):
             halo_surface = pygame.Surface((paddle.rect.width + i, paddle.rect.height + i), pygame.SRCALPHA)
-            alpha = max(20, 255 // (i + 1))  # Transparência proporcional
+            alpha = max(20, 255 // (i + 1))
             pygame.draw.rect(halo_surface, (*halo_color, alpha), (0, 0, paddle.rect.width + i, paddle.rect.height + i))
             surface.blit(halo_surface, (paddle.rect.x - i//2, paddle.rect.y - i//2))
 
@@ -117,7 +117,7 @@ def run_game():
     score_b = 0
     paused = False
     running = True
-    flash_timer = 0
+    ball.glow_timer = 0
 
     # Timers para tremor
     tremor_a_timer = 0
@@ -156,7 +156,7 @@ def run_game():
                 ball.rect.x = SCREEN_WIDTH // 2
                 ball.rect.y = SCREEN_HEIGHT // 2
                 ball.velocity[0] = -ball.velocity[0]
-                flash_timer = 10  # Mais quadros de verde
+                ball.glow_timer = 10  # Mais quadros de verde
 
             if ball.rect.x >= SCREEN_WIDTH - ball.rect.width:
                 score_a += 1
@@ -164,7 +164,7 @@ def run_game():
                 ball.rect.x = SCREEN_WIDTH // 2
                 ball.rect.y = SCREEN_HEIGHT // 2
                 ball.velocity[0] = -ball.velocity[0]
-                flash_timer = 10  # Mais quadros de verde
+                ball.glow_timer = 10  # Mais quadros de verde
 
             if pygame.sprite.collide_mask(ball, paddle_a):
                 ball.bounce()
@@ -197,11 +197,7 @@ def run_game():
 
                 run_game()
 
-            if flash_timer > 0:
-                screen.fill((0, 255, 0))
-                flash_timer -= 1
-            else:
-                screen.fill("gray")
+            screen.fill("gray")
 
             draw_net(screen)
 

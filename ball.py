@@ -8,13 +8,13 @@ class Ball(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
         super().__init__()
         self.normal_color = pygame.Color(color)
-        self.glow_color = pygame.Color(255, 255, 0)
+        self.glow_color = pygame.Color(0, 255, 0)
         self.width = width
         self.height = height
 
-        self.image = pygame.Surface([width, height])
-        self.image.fill("black")
-        self.image.set_colorkey("black")
+        self.image = pygame.Surface([width, height], pygame.SRCALPHA)
+        #self.image.fill("black")
+        #self.image.set_colorkey("black")
 
         self.glow_timer = 0 
         self.draw_ball(self.normal_color)
@@ -24,7 +24,7 @@ class Ball(pygame.sprite.Sprite):
 
     def draw_ball(self, color):
         # Desenha a bola base com uma cor sólida
-        self.image.fill("black")
+        self.image.fill((0, 0, 0, 0))
         pygame.draw.circle(self.image, color, (self.width // 2, self.height // 2), self.width // 2)
 
     def apply_contour(self):
@@ -43,6 +43,7 @@ class Ball(pygame.sprite.Sprite):
 
         
         contour_surface = pygame.image.frombuffer(contour_bgr.tobytes(), (self.width, self.height), "RGB")
+        contour_surface.set_colorkey((0, 0, 0))  # só sobra as linhas vermelhas
         self.image.blit(contour_surface, (0, 0))
 
     def update(self):
