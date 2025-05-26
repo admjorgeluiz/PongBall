@@ -8,7 +8,7 @@ class Ball(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
         super().__init__()
         self.normal_color = pygame.Color(color)
-        self.glow_color = pygame.Color(0, 255, 0)
+        self.glow_color = pygame.Color(255, 0, 0)
         self.width = width
         self.height = height
 

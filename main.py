@@ -104,7 +104,7 @@ def run_game():
     paddle_b.rect.x = SCREEN_WIDTH - 10
     paddle_b.rect.y = 200
 
-    ball = Ball("red", 20, 20)
+    ball = Ball("blue", 20, 20)
     ball.rect.x = SCREEN_WIDTH // 2
     ball.rect.y = SCREEN_HEIGHT // 2
 
