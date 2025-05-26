@@ -13,8 +13,6 @@ class Ball(pygame.sprite.Sprite):
         self.height = height
 
         self.image = pygame.Surface([width, height], pygame.SRCALPHA)
-        #self.image.fill("black")
-        #self.image.set_colorkey("black")
 
         self.glow_timer = 0 
         self.draw_ball(self.normal_color)
