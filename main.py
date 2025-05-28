@@ -16,11 +16,11 @@ pygame.font.init()
 pygame.mixer.pre_init(44100, -16, 1, 512)
 
 # Sons
-hit_sound = pygame.mixer.Sound("Pong!.mp3")
+hit_sound = pygame.mixer.Sound("assets/Pong!.mp3")
 hit_sound.set_volume(0.2)
-score_sound = pygame.mixer.Sound("game_point.mp3")
+score_sound = pygame.mixer.Sound("assets/game_point.mp3")
 score_sound.set_volume(0.2)
-victory_sound = pygame.mixer.Sound("winner.mp3")
+victory_sound = pygame.mixer.Sound("assets/winner.mp3")
 victory_sound.set_volume(0.2)
 
 # Configurações
