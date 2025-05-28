@@ -1,0 +1,63 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ambientes Virtuais
+venv/
+env/
+.venv/
+*.venv
+
+# Arquivos de build e distribuição do PyInstaller
+build/
+dist/
+*.spec
+# Seus executáveis gerados (opcional, mas recomendado se você os reconstrói frequentemente)
+*.exe
+*.dmg
+*.app # Se estiver no macOS e o .app for um artefato de build
+
+# Arquivos de configuração de IDEs/Editores populares
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+nbproject/ # NetBeans
+
+# Arquivos de sistema operacional
+.DS_Store # macOS
+Thumbs.db # Windows
+ehthumbs.db # Windows
+
+# Arquivos de log
+*.log
+logs/
+
+# Arquivos de ambiente (geralmente contêm segredos)
+.env
+.env.*
+!.env.example # Exemplo de como não ignorar um arquivo específico de template de .env
+
+# Dependências do Notebook Jupyter (se aplicável)
+.ipynb_checkpoints
+
+# Arquivos de dependências do Python (se você usa gerenciadores de pacotes específicos)
+# pip freeze > requirements.txt (o requirements.txt DEVE ser versionado)
+# pipenv
+Pipfile.lock
+
+# Cobertura de testes
+.coverage
+.coverage.*
+htmlcov/
+pytest_cache/
+.pytest_cache/
+
+# Documentação gerada
+docs/_build/
+
+# Arquivos temporários específicos do seu projeto (se houver)
+# temp_files/
+# *.tmp
