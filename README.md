@@ -55,7 +55,7 @@ python main.py
 - `ball.py` – classe Ball: movimento, contorno OpenCV, brilho e colisões.  
 - `paddle.py` – classe Paddle: desenho e movimento das raquetes.  
 - `requirements.txt` – dependências do projeto.  
-- Arquivos de som (`.mp3`) na raiz.
+- Arquivos de som (`.mp3`) na assets/.
 
 ## Contribuição
 
