@@ -46,7 +46,7 @@ python main.py
 - **Movimentar**:  
   - Jogador A: **W** (subir) / **S** (descer)  
   - Jogador B: **↑** (subir) / **↓** (descer)  
-- **Pausa**: Tecla **P**  
+- **Pausa**: Tecla **P**, durante a **Pausa** tecla **R** para reinício
 - **Vencer**: Primeiro a 10 pontos.  
 
 ## Estrutura de Arquivos
