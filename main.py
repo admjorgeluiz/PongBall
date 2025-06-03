@@ -233,9 +233,7 @@ def run_game():
                                 if sub_event.key == pygame.K_p:
                                     paused = not paused
                                     temp_paused = False
-                                elif (
-                                    sub_event.key == pygame.K_r
-                                ):  # NOVA OPÇÃO: Reiniciar
+                                elif (sub_event.key == pygame.K_r):
                                     fade(
                                         screen,
                                         SCREEN_WIDTH,
@@ -243,9 +241,9 @@ def run_game():
                                         fade_in=False,
                                         text="Reiniciando...",
                                         font=small_font,
-                                    )
+                                        )
                                     run_game()  # Chama run_game() para reiniciar
-                                    return  # Sai da instância atual de run_game()
+                                    return
                         clock.tick(30)
                 fade(
                     screen,
@@ -273,9 +271,7 @@ def run_game():
 
             # Verifica colisão da bola com as bordas superior e inferior da tela
             if ball.rect.y <= 0 or ball.rect.y >= SCREEN_HEIGHT - ball.rect.height:
-                ball.velocity[1] = -ball.velocity[
-                    1
-                ]  # Inverte a direção vertical da bola
+                ball.velocity[1] = -ball.velocity[1]  # Inverte a direção vertical da bola
 
             # Verifica se a bola saiu pela esquerda (ponto para jogador B)
             if ball.rect.x <= 0:
@@ -304,7 +300,7 @@ def run_game():
 
             # Verifica colisão da bola com a raquete A
             if pygame.sprite.collide_mask(ball, paddle_a):
-                ball.bounce()  # Presumo que 'bounce' seja um método da classe Ball para tratar a colisão
+                ball.bounce()
                 hit_sound.play()
                 tremor_a_timer = 10  # Ativa o tremor para a raquete A
 
