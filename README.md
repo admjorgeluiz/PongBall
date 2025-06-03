@@ -64,7 +64,3 @@ python main.py
 3. Commit suas mudanças (`git commit -m 'Minha feature'`).  
 4. Push para sua branch (`git push origin feature/minha-feature`).  
 5. Abra um Pull Request.
-
-## Licença
-
-Projeto aberto sob licença MIT. Veja o arquivo `LICENSE` para detalhes.
